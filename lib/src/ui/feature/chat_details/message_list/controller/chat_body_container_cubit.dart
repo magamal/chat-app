@@ -14,7 +14,7 @@ part 'chat_body_container_cubit.freezed.dart';
 @injectable
 class ChatBodyContainerCubit
     extends BaseCubit<ChatHistoryBusinessBroker, ChatBodyContainerStates> {
-  ChatBodyContainerCubit(businessBroker)
+  ChatBodyContainerCubit(ChatHistoryBusinessBroker businessBroker)
       : super(const ChatBodyContainerStates.initial(), businessBroker) {}
 
   @override

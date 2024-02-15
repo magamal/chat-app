@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:im/src/di/injector.dart';
-import 'package:im/src/feature/chat_details/chat_details_page.dart';
+import 'package:im/src/ui/feature/chat_details/chat_details_page.dart';
 import 'package:injectable/injectable.dart';
 
 void main() async {
