@@ -1,39 +1,29 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:flutter/material.dart';
-import 'package:im/main.dart';
-import 'package:im/src/business/chat_history_business_broker.dart';
 import 'package:im/src/database/base_processor.dart';
 import 'package:im/src/ui/base/base_processor_event.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rxdart/rxdart.dart';
 
-import '../ui/feature/chat_details/bottom_edit_text/bottom_edit_text_cubit.dart';
+import '../database/database_processor.dart';
+import '../network/network_processor.dart';
 
 @singleton
 class CharHistoryMediator {
+  final HashMap<FlowEvent, IMFlow> imFlows = HashMap();
+
   final HashMap<BaseProcessorEvent, List<BaseProcessor>> brokerSubscribers =
       HashMap();
 
-  config() {
-    final newMessageFlow = FlowConfig.create("new-message-flow")
-        .triggeredBy(FlowEvent.SEND_NEW_MESSAGE)
-        .addStage()
-        .action(Stage1Action1)
-        .action(Stage1Action2)
-        .action(Stage1Action3)
-        // .onError(BottomEditTextCubit.setNewMessageError)
-        .endStage()
-        .addStage()
-        .action(Stage2Action1)
-        .action(Stage2Action2)
-        .action(Stage2Action3)
-        .endStage()
-        .build()
-        .listen((event) {}, onDone: () {
-      print("zzzzz end flow");
-    });
+  final DataBaseProcessor dataBaseProcessor;
+  final NetworkProcessor networkProcessor;
+
+  CharHistoryMediator(this.dataBaseProcessor, this.networkProcessor) {
+    _initSendMessageFlow();
+  }
+
+  addMessage() async {
+    imFlows[FlowEvent.SEND_NEW_MESSAGE]?.startFlow();
   }
 
   notify(BaseProcessorEvent event) {
@@ -46,47 +36,45 @@ class CharHistoryMediator {
     notify(event);
   }
 
-  Future Stage1Action1() async {
-    print("zzzzz start: Stage1Action1");
+  void _initSendMessageFlow() {
+    /** send message flow
+     * 1- save in data base
+     * 2.1 update ui
+     * 2.2 send request
+     * 3 update database
+     * 4 update ui
+     */
+    final newMessageFlow = FlowConfig.create("new-message-flow")
+        .triggeredBy(FlowEvent.SEND_NEW_MESSAGE)
+        .addStage()
+        .action(dataBaseProcessor.saveMessage)
+        .endStage()
+        .addStage()
+        .action(updateUi)
+        .action(networkProcessor.sendMessage)
+        .endStage()
+        .addStage()
+        .action(dataBaseProcessor.updateDataBase)
+        .endStage()
+        .addStage()
+        .action(updateUi)
+        .endStage()
+        .build();
+
+    imFlows.putIfAbsent(newMessageFlow.flowEvent, () => newMessageFlow);
+  }
+
+  Future updateUi() async {
+    print("Started: updating ui");
     await Future.delayed(Duration(seconds: 1));
-    print("zzzzz end: Stage1Action1");
-  }
-
-  Future Stage1Action2() async {
-    print("zzzzz start: Stage1Action2");
-    await Future.delayed(Duration(seconds: 2));
-    print("zzzzz end: Stage1Action2");
-  }
-
-  Future Stage1Action3() async {
-    print("zzzzz start: Stage1Action3");
-    await Future.delayed(Duration(seconds: 3));
-    print("zzzzz end: Stage1Action3");
-  }
-
-  Future Stage2Action1() async {
-    print("zzzzz start: Stage2Action1");
-    await Future.delayed(Duration(seconds: 1));
-    print("zzzzz end: Stage2Action1");
-  }
-
-  Future Stage2Action2() async {
-    print("zzzzz start: Stage2Action2");
-    await Future.delayed(Duration(seconds: 2));
-    print("zzzzz end: Stage2Action2");
-  }
-
-  Future Stage2Action3() async {
-    print("zzzzz start: Stage2Action3");
-    await Future.delayed(Duration(seconds: 3));
-    print("zzzzz end: Stage2Action3");
+    print("Finished: updating ui");
   }
 }
 
 class FlowConfig {
   Stream? _flow;
 
-  FlowEvent? _flowEvent;
+  late FlowEvent _flowEvent;
   String name;
   final List<FlowStageBuilder> _stages = List.empty(growable: true);
 
@@ -110,12 +98,12 @@ class FlowConfig {
     return _currentStage!;
   }
 
-  Stream build() {
+  IMFlow build() {
     Stream stream = Stream.value(1);
     for (var stage in _stages) {
       stream = stream.asyncMap((event) => stage._buildStageFuture());
     }
-    return stream;
+    return IMFlow(stream, _flowEvent);
   }
 }
 
@@ -141,10 +129,14 @@ class FlowStageBuilder {
   }
 
   Future<List<dynamic>> _buildStageFuture() async {
-    return await Stream.fromFutures(actions.map((e) async => await e()))
-        .toList();
+    try {
+      return await Stream.fromFutures(actions.map((e) async => await e()))
+          .toList();
+    } catch (error, s) {
+      return await Stream.fromFutures(errorActions.map((e) async => await e()))
+          .toList();
+    }
   }
-
 }
 
 // class IMStage {
@@ -155,7 +147,18 @@ class FlowStageBuilder {
 //         }
 // }
 
-class IMFlow {}
+class IMFlow {
+  final Stream stream;
+  final FlowEvent flowEvent;
+
+  IMFlow(this.stream, this.flowEvent);
+
+  startFlow() {
+    stream.listen((event) {}, onDone: () {
+      print("zzzz finished IM Flow");
+    });
+  }
+}
 
 enum FlowEvent { SEND_NEW_MESSAGE }
 

@@ -22,7 +22,7 @@ class ImAppBarCubit
 
   void addMessage() {
     // businessBroker.actions[NewMessageAction]?.apply();
-    mediator.config();
+    mediator.addMessage();
   }
 
   // @override

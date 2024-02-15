@@ -39,4 +39,16 @@ class DataBaseProcessor implements BaseProcessor {
     print("update state of send message");
     brokerStream.emit(MessageUpdate());
   }
+
+  Future saveMessage() async {
+    print("Started: saveMessage");
+    await Future.delayed(Duration(seconds: 1));
+    print("Finished: saveMessage");
+  }
+
+  Future updateDataBase() async {
+    print("Started: updateDataBase");
+    await Future.delayed(Duration(seconds: 1));
+    print("Finished: updateDataBase");
+  }
 }

@@ -29,4 +29,10 @@ class NetworkProcessor extends BaseProcessor {
     print("send Message in HTTP Request");
     brokerStream.emit(event);
   }
+
+  Future sendMessage() async {
+    print("Started: sendMessage");
+    await Future.delayed(Duration(seconds: 1));
+    print("Finished: sendMessage");
+  }
 }
