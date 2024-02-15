@@ -17,6 +17,7 @@ class CharHistoryMediator {
       HashMap();
 
   config() {
+    Seq
     final newMessageFlow = FlowConfig.create("new-message-flow")
         .triggeredBy(FlowEvent.SEND_NEW_MESSAGE)
         .addStage()
@@ -31,7 +32,7 @@ class CharHistoryMediator {
         .action(Stage2Action3)
         .endStage()
         .build()
-        .listen((event) {
+        .listen((event) {}, onDone: () {
       print("zzzzz end flow");
     });
   }
@@ -50,7 +51,6 @@ class CharHistoryMediator {
     print("zzzzz start: Stage1Action1");
     await Future.delayed(Duration(seconds: 1));
     print("zzzzz end: Stage1Action1");
-    return Stream.empty();
   }
 
   Future Stage1Action2() async {
@@ -100,10 +100,6 @@ class FlowConfig {
     return flowConfig;
   }
 
-  _createImFlowStream() {
-    _flow = const Stream.empty();
-  }
-
   FlowConfig triggeredBy(FlowEvent event) {
     _flowEvent = event;
     return this;
@@ -115,18 +111,12 @@ class FlowConfig {
     return _currentStage!;
   }
 
-  Future _buildStream() async {
-    _flow = _createImFlowStream();
-    List<List> streams = List.empty(growable: true);
-    await Future.forEach(_stages, (stage) async {
-      final stageStream = await stage._createStageStream();
-      streams.add(stageStream);
-    });
-    return;
-  }
-
   Stream build() {
-    return Stream.fromFuture(_buildStream());
+    Stream stream = Stream.value(1);
+    for (var stage in _stages) {
+      stream = stream.asyncMap((event) => stage._buildStageFuture());
+    }
+    return stream;
   }
 }
 
@@ -152,15 +142,10 @@ class FlowStageBuilder {
   }
 
   Future<List<dynamic>> _buildStageFuture() async {
-    final List<dynamic> result = List.empty(growable: true);
     return await Stream.fromFutures(actions.map((e) async => await e()))
         .toList();
   }
 
-  Future<List> _createStageStream() async {
-    // return Stream.fromFuture(_buildStageFuture());
-    return actions.map((e) async => await e()).toList();
-  }
 }
 
 // class IMStage {
