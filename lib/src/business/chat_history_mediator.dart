@@ -17,7 +17,6 @@ class CharHistoryMediator {
       HashMap();
 
   config() {
-    Seq
     final newMessageFlow = FlowConfig.create("new-message-flow")
         .triggeredBy(FlowEvent.SEND_NEW_MESSAGE)
         .addStage()
