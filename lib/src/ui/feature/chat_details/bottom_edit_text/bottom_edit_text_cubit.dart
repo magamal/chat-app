@@ -8,7 +8,9 @@ import 'bottom_edit_text_state.dart';
 @injectable
 class BottomEditTextCubit
     extends BaseCubit<ChatHistoryBusinessBroker, BottomEditTextState> {
-  BottomEditTextCubit(businessBroker) : super(InitState(), businessBroker);
+
+
+  BottomEditTextCubit(ChatHistoryBusinessBroker businessBroker) : super(InitState(), businessBroker);
 
   @override
   List<BaseBusinessEvent> getEventsToSubscribeWithBusiness() => [];
@@ -17,7 +19,14 @@ class BottomEditTextCubit
   notifyBusinessEvent(BaseBusinessEvent businessEvent, String message) {}
 
   void onEditTextChanged(String value) {
-    final action = businessBroker.actions[NewMessageAction] as NewMessageAction;
-    action.message = value;
+  final action = businessBroker.actions[NewMessageAction] as NewMessageAction;
+  action.message = value;
+  }
+
+  String collectNewMessageData() {
+  return "";
+  }
+  setNewMessageError(){
+
   }
 }

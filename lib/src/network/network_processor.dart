@@ -14,7 +14,7 @@ class NetworkProcessor extends BaseProcessor {
   }
 
   void _setupStreamListener() {
-    brokerStream.subscripe(MessageSavedToDatabaseSuccess(), this);
+    brokerStream.subscribe(MessageSavedToDatabaseSuccess(), this);
   }
 
   @override

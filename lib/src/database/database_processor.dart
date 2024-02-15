@@ -14,8 +14,8 @@ class DataBaseProcessor implements BaseProcessor {
   }
 
   void _setupStreamListener() {
-    brokerStream.subscripe(SaveMessageToDataBase(), this);
-    brokerStream.subscripe(MessageSentToServerSuccess(), this);
+    brokerStream.subscribe(SaveMessageToDataBase(), this);
+    brokerStream.subscribe(MessageSentToServerSuccess(), this);
   }
 
   @override

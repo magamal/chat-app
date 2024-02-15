@@ -9,7 +9,7 @@ class BusinessBrokerStream {
   final HashMap<BaseProcessorEvent, List<BaseProcessor>> brokerSubscribers =
       HashMap();
 
-  subscripe(BaseProcessorEvent processorEvent, BaseProcessor processor) {
+  subscribe(BaseProcessorEvent processorEvent, BaseProcessor processor) {
     if (brokerSubscribers.containsKey(processorEvent)) {
       brokerSubscribers[processorEvent]?.add(processor);
     } else {
