@@ -5,6 +5,8 @@ import 'package:im/src/database/database_stream.dart';
 import 'package:im/src/ui/base/base_processor_event.dart';
 import 'package:injectable/injectable.dart';
 
+import '../business/im_flow/im_base_flow.dart';
+
 @singleton
 class DataBaseProcessor implements BaseProcessor {
   final BusinessBrokerStream brokerStream;
@@ -40,15 +42,23 @@ class DataBaseProcessor implements BaseProcessor {
     brokerStream.emit(MessageUpdate());
   }
 
-  Future saveMessage() async {
+  Future saveMessage(List<ActionResult>? lastActionResult) async {
     print("Started: saveMessage");
+    lastActionResult?.forEach((action) {
+      // print("saveMessage: actionName:  ${action.actionName} || result ${action.result}");
+    });
     await Future.delayed(Duration(seconds: 1));
     print("Finished: saveMessage");
+    return "Message Saves success in database";
   }
 
-  Future updateDataBase() async {
+  Future updateDataBase(List<ActionResult>? lastActionResult) async {
     print("Started: updateDataBase");
+    lastActionResult?.forEach((action) {
+      // print("updateDataBase: actionName:  ${action.actionName} || result ${action.result}");
+    });
     await Future.delayed(Duration(seconds: 1));
     print("Finished: updateDataBase");
+    return "updated success in database";
   }
 }

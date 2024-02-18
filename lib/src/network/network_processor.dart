@@ -3,6 +3,7 @@ import 'package:im/src/database/base_processor.dart';
 import 'package:injectable/injectable.dart';
 
 import '../business/bussiness_broker_stream.dart';
+import '../business/im_flow/im_base_flow.dart';
 import '../ui/base/base_processor_event.dart';
 
 @singleton
@@ -30,8 +31,11 @@ class NetworkProcessor extends BaseProcessor {
     brokerStream.emit(event);
   }
 
-  Future sendMessage() async {
+  Future sendMessage(List<ActionResult>? lastActionResult) async {
     print("Started: sendMessage");
+    lastActionResult?.forEach((action) {
+      // print("sendMessage: actionName:  ${action.actionName} || result ${action.result}");
+    });
     await Future.delayed(Duration(seconds: 1));
     print("Finished: sendMessage");
   }
