@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:im/src/di/injector.dart';
+import 'package:im/src/resources/localz.dart';
 
 import '../../../styles/app_colors.dart';
 import 'controller/im_app_bar_cubit.dart';
 import 'im_title_text.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 
 class ImAppBar extends AppBar {
   ImAppBar({super.key});
@@ -46,7 +51,7 @@ class _ImAppBarState extends State<ImAppBar> {
               initial: (state) => "",
               numberOfMessagesChanged: (state) => state.numberOfMessages);
 
-          return ImTitleText(text: "Messages: $numberOfMessages}");
+          return ImTitleText(text: "${context.localZ.messages} $numberOfMessages");
         },
         listener: (BuildContext context, ImAppBarState state) {},
       ),
