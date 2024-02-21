@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../gen/assets.gen.dart';
 import 'appbar/im_app_bar.dart';
 import 'message_list/chat_body_container.dart';
 
@@ -18,6 +19,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
       appBar: ImAppBar(),
       body: Column(
         children: [
+          Image.asset(Assets.welcome.path),
           ChatBodyContainer(),
         ],
       ),
