@@ -1,0 +1,41 @@
+flavors:
+  development:
+    app:
+      name: "dev App"
+
+    android:
+      applicationId: "com.orange.im"
+      resValues:
+        variable_one:
+          type: "string"
+          value: "example variable one"
+        variable_two:
+          type: "string"
+          value: "example variable two"
+    ios:
+      bundleId: "com.orange.im"
+      variables:
+        VARIABLE_ONE:
+          value: "variable1"
+        VARIABLE_TWO:
+          target: "debug"
+          value: "variable2"
+
+  quality:
+    app:
+      name: "test App"
+
+    android:
+      applicationId: "com.orange.im"
+    ios:
+      bundleId: "com.orange.im"
+
+
+  production:
+    app:
+      name: "prod App"
+
+    android:
+      applicationId: "com.orange.im"
+    ios:
+      bundleId: "com.orange.im"

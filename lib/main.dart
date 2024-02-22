@@ -1,19 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:im/src/di/injector.dart';
 import 'package:im/src/ui/feature/chat_details/chat_details_page.dart';
 import 'package:injectable/injectable.dart';
 
-void main() async {
-  FlavorConfig(
-    name: "DEVELOP",
-    color: Colors.red,
-    location: BannerLocation.bottomStart,
-    variables: {
-      "counter": 5,
-      "baseUrl": "https://www.example.com",
-    },
-  );
+import 'flavors.dart';
+
+FutureOr<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDependencies(
       environment: const String.fromEnvironment("app_env",
@@ -27,9 +21,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    String? _counter = FlavorConfig.instance.name;
-    print("XXX");
-    print(_counter);
+    print("Flavor name" + F.name);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
