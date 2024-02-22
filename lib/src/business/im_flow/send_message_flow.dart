@@ -1,21 +1,20 @@
+import 'package:im/src/business/im_flow/im_base_flow_mediator_container.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../database/database_processor.dart';
 import '../../network/network_processor.dart';
+import '../chat_mediator.dart';
 import 'im_base_flow.dart';
 
 @injectable
-class SendMessageFlow {
-  final DataBaseProcessor dataBaseProcessor;
-  final NetworkProcessor networkProcessor;
+class SendMessageFlow extends ImBaseFlowMediatorContainer {
+  final DataBaseProcessor _dataBaseProcessor;
+  final NetworkProcessor _networkProcessor;
 
-  late IMFlow flow;
+  SendMessageFlow(this._dataBaseProcessor, this._networkProcessor);
 
-  SendMessageFlow(this.dataBaseProcessor, this.networkProcessor) {
-    _initFlow();
-  }
-
-  void _initFlow() {
+  @override
+  IMFlow buildFlow(Map<String, dynamic> parameters) {
     /** send message flow
      * 1- save in data base
      * 2.1 update ui
@@ -23,17 +22,17 @@ class SendMessageFlow {
      * 3 update database
      * 4 update ui
      */
-    flow = FlowConfig.create("new-message-flow")
-        .triggeredBy(FlowEvent.SEND_NEW_MESSAGE)
+    return FlowConfig.create("new-message-flow")
+        .triggeredBy(getFlowEvent())
         .addStage()
-        .action("saveMessage", dataBaseProcessor.saveMessage)
+        .action("saveMessage", _dataBaseProcessor.saveMessage)
         .endStage()
         .addStage()
         .action("updateUi", updateUi)
-        .action("sendMessage", networkProcessor.sendMessage)
+        .action("sendMessage", _networkProcessor.sendMessage)
         .endStage()
         .addStage()
-        .action("updateDataBase", dataBaseProcessor.updateDataBase)
+        .action("updateDataBase", _dataBaseProcessor.updateDataBase)
         .endStage()
         .addStage()
         .action("updateUi", updateUi)
@@ -41,12 +40,15 @@ class SendMessageFlow {
         .build();
   }
 
-  Future updateUi(List<ActionResult>? lastActionResult) async {
-    print("Started: updating ui");
-    lastActionResult?.forEach((action) {
-      // print("updateDataBase: actionName:  ${action.actionName} || result ${action.result}");
-    });
-    await Future.delayed(Duration(seconds: 1));
-    print("Finished: updating ui");
+  @override
+  FlowEvent getFlowEvent() => FlowEvent.SEND_NEW_MESSAGE;
+
+  Future updateUi(List<ActionResult>? lastActionResult) async {}
+}
+
+extension SendMessageFlowExtensions on ChatMediator {
+  addMessage() {
+    imFlows[FlowEvent.SEND_NEW_MESSAGE]
+        ?.startFlow({"messageText": "Hellooooo"});
   }
 }

@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:core';
 
+typedef ImActionType = Future Function(List<ActionResult>?);
+typedef ImErrorActionType = Future Function(String, Exception?);
+
 class FlowConfig {
   Stream? _flow;
 
@@ -96,8 +99,6 @@ class IMFlow {
   }
 }
 
-enum FlowEvent { SEND_NEW_MESSAGE }
-
 class ImAction {
   final ImActionType action;
   final String actionName;
@@ -120,6 +121,6 @@ class ActionResult {
       ActionResult._(actionName, null, false, exception);
 }
 
-typedef ImActionType = Future Function(List<ActionResult>?);
+enum FlowEvent { SEND_NEW_MESSAGE }
 
-typedef ImErrorActionType = Future Function(String, Exception?);
+

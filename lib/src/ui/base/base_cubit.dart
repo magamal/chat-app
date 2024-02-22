@@ -1,24 +1,23 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:im/src/business/base_mediator/base_mediator.dart';
 
-import 'base_business_broker.dart';
 import 'base_business_event.dart';
 
-abstract class BaseCubit<
-    BusinessBroker extends BaseBusinessBroker<BaseBusinessEvent>,
-    State> extends Cubit<State> {
-  final BusinessBroker businessBroker;
+abstract class BaseCubit<BusinessMediator extends BaseMediator, State>
+    extends Cubit<State> {
+  final BusinessMediator mediator;
 
-  BaseCubit(super.initialState, this.businessBroker) {
+  BaseCubit(super.initialState, this.mediator) {
     _initBusinessBrokerEvents();
   }
 
-  notifyBusinessEvent(BaseBusinessEvent businessEvent, String message);
+  Future notifyBusinessEvent(BaseBusinessEvent businessEvent);
 
   List<BaseBusinessEvent> getEventsToSubscribeWithBusiness();
 
   void _initBusinessBrokerEvents() {
     getEventsToSubscribeWithBusiness().forEach((event) {
-      businessBroker.subscribe(event, this);
+      mediator.subscribe(event, this);
     });
   }
 }
