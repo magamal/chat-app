@@ -1,5 +1,6 @@
 import 'package:im/src/business/chat_history_processor_events.dart';
 import 'package:im/src/database/base_processor.dart';
+import 'package:im/src/utils/logger/logger.dart';
 import 'package:injectable/injectable.dart';
 
 import '../business/bussiness_broker_stream.dart';
@@ -27,16 +28,13 @@ class NetworkProcessor extends BaseProcessor {
   }
 
   void onMessageSavedToDatabaseSuccess(MessageSavedToDatabaseSuccess event) {
-    print("send Message in HTTP Request");
+    logDebug("send Message in HTTP Request");
     brokerStream.emit(event);
   }
 
   Future sendMessage(List<ActionResult>? lastActionResult) async {
-    print("Started: sendMessage");
-    lastActionResult?.forEach((action) {
-      // print("sendMessage: actionName:  ${action.actionName} || result ${action.result}");
-    });
+    logDebug("Started: sendMessage");
     await Future.delayed(Duration(seconds: 1));
-    print("Finished: sendMessage");
+    logDebug("Finished: sendMessage");
   }
 }

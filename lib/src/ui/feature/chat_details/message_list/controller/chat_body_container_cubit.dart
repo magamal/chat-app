@@ -1,3 +1,4 @@
+import 'package:im/src/utils/logger/logger.dart';
 import 'package:injectable/injectable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -23,6 +24,8 @@ class ChatBodyContainerCubit
 
   @override
   Future notifyBusinessEvent(BaseBusinessEvent businessEvent) async {
-    switch (businessEvent) {}
+    logDebug("Started: updateDataBase");
+    await Future.delayed(Duration(seconds: 1));
+    logDebug("Finished: updateDataBase");
   }
 }

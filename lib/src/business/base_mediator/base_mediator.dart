@@ -32,9 +32,10 @@ abstract class BaseMediator {
     }
   }
 
-  notify(BaseBusinessEvent event) {
-    subscribers[event]?.forEach((cubit) {
-      cubit.notifyBusinessEvent(event);
-    });
+  notify(BaseBusinessEvent event) async{
+    final cubits = subscribers[event];
+    if (cubits != null) {
+     await Future.forEach(cubits, (cubit) => cubit?.notifyBusinessEvent(event));
+    }
   }
 }

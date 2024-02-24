@@ -3,6 +3,7 @@ import 'package:im/src/business/chat_history_processor_events.dart';
 import 'package:im/src/database/base_processor.dart';
 import 'package:im/src/database/database_stream.dart';
 import 'package:im/src/ui/base/base_processor_event.dart';
+import 'package:im/src/utils/logger/logger.dart';
 import 'package:injectable/injectable.dart';
 
 import '../business/im_flow/im_base_flow.dart';
@@ -33,32 +34,26 @@ class DataBaseProcessor implements BaseProcessor {
   }
 
   void onSaveMessageToDataBseEvent(SaveMessageToDataBase event) {
-    print("Message saved to Data Base");
+    logDebug("Message saved to Data Base");
     brokerStream.emit(MessageSavedToDatabaseSuccess());
   }
 
   void onMessageSentToServerSuccess(MessageSentToServerSuccess event) {
-    print("update state of send message");
+    logDebug("update state of send message");
     brokerStream.emit(MessageUpdate());
   }
 
   Future saveMessage(List<ActionResult>? lastActionResult) async {
-    print("Started: saveMessage");
-    lastActionResult?.forEach((action) {
-      // print("saveMessage: actionName:  ${action.actionName} || result ${action.result}");
-    });
+    logDebug("Started: saveMessage");
     await Future.delayed(Duration(seconds: 1));
-    print("Finished: saveMessage");
+    logDebug("Finished: saveMessage");
     return "Message Saves success in database";
   }
 
   Future updateDataBase(List<ActionResult>? lastActionResult) async {
-    print("Started: updateDataBase");
-    lastActionResult?.forEach((action) {
-      // print("updateDataBase: actionName:  ${action.actionName} || result ${action.result}");
-    });
+    logDebug("Started: updateDataBase");
     await Future.delayed(Duration(seconds: 1));
-    print("Finished: updateDataBase");
+    logDebug("Finished: updateDataBase");
     return "updated success in database";
   }
 }

@@ -21,7 +21,7 @@ abstract class ImBaseFlowMediatorContainer {
     _mediator = mediator;
   }
 
-  notify(BaseBusinessEvent event) {
-    _mediator.notify(event);
+  notify(BaseBusinessEvent event) async{
+    await _mediator.notify(event);
   }
 }

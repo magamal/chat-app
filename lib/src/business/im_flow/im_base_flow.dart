@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:core';
 
+import 'package:im/src/utils/logger/logger.dart';
+
 typedef ImActionType = Future Function(List<ActionResult>?);
 typedef ImErrorActionType = Future Function(String, Exception?);
 
@@ -94,7 +96,7 @@ class IMFlow {
 
   startFlow() {
     stream.listen((event) {}, onDone: () {
-      print("zzzz finished IM Flow");
+      logDebug("zzzz finished IM Flow");
     });
   }
 }
@@ -122,5 +124,3 @@ class ActionResult {
 }
 
 enum FlowEvent { SEND_NEW_MESSAGE }
-
-
