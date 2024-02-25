@@ -5,6 +5,7 @@ library;
 
 export 'src/database_service_base.dart';
 export 'src/database_processor.dart' show DataBaseProcessor;
-export 'src/model/db_action_result.dart' show DbActionResult;
+export 'src/model/database_user_model.dart' show DataBaseUserModel;
+export 'src/model/database_message_model.dart' show DataBaseMessageModel;
 
 // TODO: Export any libraries intended for clients of this package.

@@ -1,17 +1,23 @@
 import 'package:database_service/database_service.dart';
 import 'package:im/src/business/im_flow/im_base_flow_mediator_container.dart';
+import 'package:im/src/business/models/message_model.dart';
+import 'package:im/src/business/models/user_model.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../network/network_processor.dart';
 import '../chat_mediator.dart';
+import '../processors/databse/mappers/database_message_model_mapper.dart';
+import '../processors/databse/business_databae_processor.dart';
 import 'im_base_flow.dart';
 
 @injectable
 class SendMessageFlow extends ImBaseFlowMediatorContainer {
-  final DataBaseProcessor _dataBaseProcessor;
+  final BusinessDatabaseProcessor _dataBaseProcessor;
   final NetworkProcessor _networkProcessor;
+  final DatabaseMessageModelMapper databaseMessageModelMapper;
 
-  SendMessageFlow(this._dataBaseProcessor, this._networkProcessor);
+  SendMessageFlow(this._dataBaseProcessor, this._networkProcessor,
+      this.databaseMessageModelMapper);
 
   @override
   IMFlow buildFlow(Map<String, dynamic> parameters) {
@@ -25,11 +31,11 @@ class SendMessageFlow extends ImBaseFlowMediatorContainer {
     return FlowConfig.create("new-message-flow")
         .triggeredBy(getFlowEvent())
         .addStage()
-        .action("saveMessage", _dataBaseProcessor.saveMessage)
+        .action("saveMessage", saveMessageToDatabase)
         .endStage()
         .addStage()
         .action("updateUi", updateUi)
-        .action("sendMessage", _networkProcessor.sendMessage)
+        .action("sendMessage", sendMessageToServer)
         .endStage()
         .addStage()
         .action("updateDataBase", saveMessageToDatabase)
@@ -45,11 +51,13 @@ class SendMessageFlow extends ImBaseFlowMediatorContainer {
 
   Future updateUi(List<ActionResult>? lastActionResult) async {}
 
-  Future saveMessageToDatabase(List<ActionResult>? actionResults) async{
-    _dataBaseProcessor.updateDataBase(actionResults.map((e) => DbActionResult(
-      e.actionName,e.result,e.isSuccess,e.exception
-    )))
+  Future saveMessageToDatabase(List<ActionResult>? actionResults) async {
+    final message = MessageModel();
+    final recepient = UserModel();
+    _dataBaseProcessor.saveMessage(message,recepient);
   }
+
+  Future sendMessageToServer(List<ActionResult>? actionResults) async {}
 }
 
 extension SendMessageFlowExtensions on ChatMediator {
