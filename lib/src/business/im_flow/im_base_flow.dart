@@ -121,6 +121,7 @@ class ActionResult {
 
   factory ActionResult.error(actionName, exception) =>
       ActionResult._(actionName, null, false, exception);
+
 }
 
 enum FlowEvent { SEND_NEW_MESSAGE }

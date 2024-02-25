@@ -1,7 +1,7 @@
+import 'package:database_service/database_service.dart';
 import 'package:im/src/business/im_flow/im_base_flow_mediator_container.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../database/database_processor.dart';
 import '../../network/network_processor.dart';
 import '../chat_mediator.dart';
 import 'im_base_flow.dart';
@@ -32,7 +32,7 @@ class SendMessageFlow extends ImBaseFlowMediatorContainer {
         .action("sendMessage", _networkProcessor.sendMessage)
         .endStage()
         .addStage()
-        .action("updateDataBase", _dataBaseProcessor.updateDataBase)
+        .action("updateDataBase", saveMessageToDatabase)
         .endStage()
         .addStage()
         .action("updateUi", updateUi)
@@ -44,6 +44,12 @@ class SendMessageFlow extends ImBaseFlowMediatorContainer {
   FlowEvent getFlowEvent() => FlowEvent.SEND_NEW_MESSAGE;
 
   Future updateUi(List<ActionResult>? lastActionResult) async {}
+
+  Future saveMessageToDatabase(List<ActionResult>? actionResults) async{
+    _dataBaseProcessor.updateDataBase(actionResults.map((e) => DbActionResult(
+      e.actionName,e.result,e.isSuccess,e.exception
+    )))
+  }
 }
 
 extension SendMessageFlowExtensions on ChatMediator {
