@@ -1,3 +1,6 @@
 import 'package:injectable/injectable.dart';
 
-class DataBaseMessageModel {}
+@module
+abstract class AppModule {
+
+}

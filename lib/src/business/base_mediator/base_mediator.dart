@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:im/src/di/injector.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../ui/base/base_cubit.dart';
 import '../../ui/base/base_business_event.dart';

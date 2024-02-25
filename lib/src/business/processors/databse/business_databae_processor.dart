@@ -5,7 +5,7 @@ import 'package:im/src/business/models/user_model.dart';
 import 'package:im/src/business/processors/databse/mappers/database_user_model_mapper.dart';
 import 'package:injectable/injectable.dart';
 
-@injectable
+@singleton
 class BusinessDatabaseProcessor {
   final DatabaseMessageModelMapper messageMapper;
   final DataBaseProcessor processor;

@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../di/injector.dart';
 import '../../../models/user_model.dart';
 
-@injectable
+@singleton
 class DatabaseUserModelMapper {
   DataBaseUserModel? mapToDataBase(UserModel? model) {
     return DataBaseUserModel();

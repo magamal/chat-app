@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../di/injector.dart';
 
-@injectable
+@singleton
 class DatabaseMessageModelMapper {
   DataBaseMessageModel? mapToDataBase(MessageModel? model) {
     return DataBaseMessageModel();

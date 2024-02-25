@@ -14,10 +14,9 @@ import 'im_base_flow.dart';
 class SendMessageFlow extends ImBaseFlowMediatorContainer {
   final BusinessDatabaseProcessor _dataBaseProcessor;
   final NetworkProcessor _networkProcessor;
-  final DatabaseMessageModelMapper databaseMessageModelMapper;
+  //final DatabaseMessageModelMapper databaseMessageModelMapper;
 
-  SendMessageFlow(this._dataBaseProcessor, this._networkProcessor,
-      this.databaseMessageModelMapper);
+  SendMessageFlow(this._dataBaseProcessor, this._networkProcessor);
 
   @override
   IMFlow buildFlow(Map<String, dynamic> parameters) {

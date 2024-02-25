@@ -1,3 +1,4 @@
+import 'package:database_service/database_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
@@ -11,6 +12,7 @@ final getIt = GetIt.instance;
   asExtension: false, // default
 )
 Future<void> configureDependencies({String? environment}) async {
+  await configureDependenciesForDatabaseModule(getIt,environment);
   await $initGetIt(getIt, environmentFilter: NoEnvOrContains(environment));
   // if (environment == Environment.test) {
   //   logger.d("testing env");
