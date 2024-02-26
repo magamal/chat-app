@@ -8,7 +8,7 @@ import '../im_flow/im_base_flow.dart';
 import '../im_flow/im_base_flow_mediator_container.dart';
 
 abstract class BaseMediator {
-  final HashMap<FlowEvent, ImBaseFlowMediatorContainer> imFlows = HashMap();
+  final HashMap<FlowEvent, Type> imFlows = HashMap();
 
   final HashMap<BaseBusinessEvent, List<BaseCubit>> subscribers = HashMap();
 
@@ -20,8 +20,13 @@ abstract class BaseMediator {
 
   attachFlow(Type type) {
     final flow = getIt(type: type) as ImBaseFlowMediatorContainer;
+    imFlows[flow.getFlowEvent()] = type;
+  }
+
+  startFlow(FlowEvent event, dynamic parameters) {
+    final flow = getIt(type: imFlows[event]) as ImBaseFlowMediatorContainer;
     flow.attachToMediator(this);
-    imFlows[flow.getFlowEvent()] = flow;
+    flow.startFlow(parameters);
   }
 
   subscribe(BaseBusinessEvent event, BaseCubit cubit) {

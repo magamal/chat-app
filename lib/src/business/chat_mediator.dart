@@ -8,11 +8,6 @@ import 'im_flow/im_base_flow.dart';
 
 @singleton
 class ChatMediator extends BaseMediator {
-  final DataBaseProcessor dataBaseProcessor;
-  final NetworkProcessor networkProcessor;
-
-  ChatMediator(this.dataBaseProcessor, this.networkProcessor);
-
   @override
   void initFlows() {
     _initSendMessageFlow();

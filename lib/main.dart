@@ -10,9 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await configureDependencies(
-      environment: const String.fromEnvironment("app_env",
-          defaultValue: Environment.prod));
+  await configureDependencies();
   runApp(const MyApp());
 }
 

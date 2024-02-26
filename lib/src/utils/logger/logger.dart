@@ -3,7 +3,7 @@ import 'package:logger/logger.dart';
 
 var _logger = Logger(
   printer: PrettyPrinter(
-    methodCount: 1,
+    methodCount: 0,
     // number of method calls to be displayed
     errorMethodCount: 8,
     // number of method calls if stacktrace is provided

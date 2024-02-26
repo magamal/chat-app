@@ -1,3 +1,4 @@
+import 'package:database_service/test_database_processor.dart';
 import 'package:im/src/business/im_flow/im_base_flow_mediator_container.dart';
 import 'package:injectable/injectable.dart';
 
@@ -8,10 +9,10 @@ import 'im_base_flow.dart';
 
 @injectable
 class SendMessageFlow extends ImBaseFlowMediatorContainer {
-  final DataBaseProcessor _dataBaseProcessor;
   final NetworkProcessor _networkProcessor;
+  final TestDatabaseProcessor testDatabaseProcessor;
 
-  SendMessageFlow(this._dataBaseProcessor, this._networkProcessor);
+  SendMessageFlow(this._networkProcessor, this.testDatabaseProcessor);
 
   @override
   IMFlow buildFlow(Map<String, dynamic> parameters) {
@@ -25,14 +26,14 @@ class SendMessageFlow extends ImBaseFlowMediatorContainer {
     return FlowConfig.create("new-message-flow")
         .triggeredBy(getFlowEvent())
         .addStage()
-        .action("saveMessage", _dataBaseProcessor.saveMessage)
+        .action("saveMessage", saveMessage)
         .endStage()
         .addStage()
         .action("updateUi", updateUi)
         .action("sendMessage", _networkProcessor.sendMessage)
         .endStage()
         .addStage()
-        .action("updateDataBase", _dataBaseProcessor.updateDataBase)
+        .action("updateDataBase", updateDatabaseMessage)
         .endStage()
         .addStage()
         .action("updateUi", updateUi)
@@ -44,11 +45,18 @@ class SendMessageFlow extends ImBaseFlowMediatorContainer {
   FlowEvent getFlowEvent() => FlowEvent.SEND_NEW_MESSAGE;
 
   Future updateUi(List<ActionResult>? lastActionResult) async {}
+
+  Future saveMessage(List<ActionResult>? lastActionResult) async {
+    testDatabaseProcessor.saveMessage();
+  }
+
+  Future updateDatabaseMessage(List<ActionResult>? lastActionResult) async {
+    testDatabaseProcessor.updateDataBase();
+  }
 }
 
 extension SendMessageFlowExtensions on ChatMediator {
   addMessage() {
-    imFlows[FlowEvent.SEND_NEW_MESSAGE]
-        ?.startFlow({"messageText": "Hellooooo"});
+    startFlow(FlowEvent.SEND_NEW_MESSAGE, {"messageText": "Hellooooo"});
   }
 }
